@@ -1,0 +1,163 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 1200px;
+                 height: 1000px;
+                 background-color: #222222;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "font": {"color": "white"}, "id": "PYPL", "label": "PYPL", "shape": "dot", "size": 1}, {"color": "yellow", "font": {"color": "white"}, "id": "TROW", "label": "TROW", "shape": "star", "size": 20}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "CG", "label": "CG", "shape": "dot", "size": 6}, {"color": "yellow", "font": {"color": "white"}, "id": "SEIC", "label": "SEIC", "shape": "star", "size": 20}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "IBKR", "label": "IBKR", "shape": "dot", "size": 4}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "ACGL", "label": "ACGL", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "LPLA", "label": "LPLA", "shape": "dot", "size": 4}, {"color": "yellow", "font": {"color": "white"}, "id": "PFG", "label": "PFG", "shape": "star", "size": 20}, {"color": "yellow", "font": {"color": "white"}, "id": "FITB", "label": "FITB", "shape": "star", "size": 20}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "CINF", "label": "CINF", "shape": "dot", "size": 5}, {"color": "yellow", "font": {"color": "white"}, "id": "HBAN", "label": "HBAN", "shape": "star", "size": 20}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "ARCC", "label": "ARCC", "shape": "dot", "size": 5}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "EWBC", "label": "EWBC", "shape": "dot", "size": 7}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "NDAQ", "label": "NDAQ", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "COIN", "label": "COIN", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "NTRS", "label": "NTRS", "shape": "dot", "size": 6}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "MORN", "label": "MORN", "shape": "dot", "size": 0}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "TPG", "label": "TPG", "shape": "dot", "size": 5}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "CBSH", "label": "CBSH", "shape": "dot", "size": 6}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "CACC", "label": "CACC", "shape": "dot", "size": 3}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "WTW", "label": "WTW", "shape": "dot", "size": 0}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "TW", "label": "TW", "shape": "dot", "size": 0}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "MKTX", "label": "MKTX", "shape": "dot", "size": 0}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "SIGI", "label": "SIGI", "shape": "dot", "size": 3}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "CME", "label": "CME", "shape": "dot", "size": 0.0}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "FCNCA", "label": "FCNCA", "shape": "dot", "size": 0.0}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "ERIE", "label": "ERIE", "shape": "dot", "size": 0.0}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "XP", "label": "XP", "shape": "dot", "size": 0.0}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "FUTU", "label": "FUTU", "shape": "dot", "size": 0.0}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "SOFI", "label": "SOFI", "shape": "dot", "size": 0.0}]);
+                  edges = new vis.DataSet([{"correlation": 0.511292367621753, "from": "PYPL", "to": "TROW", "width": 1}, {"correlation": 0.46291931136573955, "from": "PYPL", "to": "CG", "width": 1}, {"correlation": 0.43357456994020827, "from": "PYPL", "to": "SEIC", "width": 1}, {"correlation": 0.43635699733058586, "from": "IBKR", "to": "ACGL", "width": 1}, {"correlation": 0.7221890174664908, "from": "IBKR", "to": "LPLA", "width": 1}, {"correlation": 0.48770795270053807, "from": "IBKR", "to": "PFG", "width": 1}, {"correlation": 0.48651224042940605, "from": "IBKR", "to": "FITB", "width": 1}, {"correlation": 0.40674076645031704, "from": "IBKR", "to": "CINF", "width": 1}, {"correlation": 0.4828482161494002, "from": "IBKR", "to": "HBAN", "width": 1}, {"correlation": 0.40699699846571, "from": "IBKR", "to": "ARCC", "width": 1}, {"correlation": 0.4795495561771169, "from": "IBKR", "to": "SEIC", "width": 1}, {"correlation": 0.5264940703937957, "from": "IBKR", "to": "EWBC", "width": 1}, {"correlation": 0.49012079995093155, "from": "ACGL", "to": "LPLA", "width": 1}, {"correlation": 0.5118791873580304, "from": "ACGL", "to": "PFG", "width": 1}, {"correlation": 0.4076509801591125, "from": "ACGL", "to": "CINF", "width": 1}, {"correlation": 0.5143411438722054, "from": "NDAQ", "to": "TROW", "width": 1}, {"correlation": 0.47019480105649497, "from": "NDAQ", "to": "SEIC", "width": 1}, {"correlation": 0.5167700190792045, "from": "TROW", "to": "COIN", "width": 1}, {"correlation": 0.44631150822395826, "from": "TROW", "to": "FITB", "width": 1}, {"correlation": 0.415632957794937, "from": "TROW", "to": "CINF", "width": 1}, {"correlation": 0.4010916633825948, "from": "TROW", "to": "HBAN", "width": 1}, {"correlation": 0.5032878052755714, "from": "TROW", "to": "NTRS", "width": 1}, {"correlation": 0.6403174306106107, "from": "TROW", "to": "CG", "width": 1}, {"correlation": 0.45641348676097054, "from": "TROW", "to": "ARCC", "width": 1}, {"correlation": 0.4859934310446698, "from": "TROW", "to": "MORN", "width": 1}, {"correlation": 0.5815203793936568, "from": "TROW", "to": "TPG", "width": 1}, {"correlation": 0.6711858715120956, "from": "TROW", "to": "SEIC", "width": 1}, {"correlation": 0.4925164079862054, "from": "TROW", "to": "CBSH", "width": 1}, {"correlation": 0.5044094959850274, "from": "TROW", "to": "CACC", "width": 1}, {"correlation": 0.4081618543751674, "from": "WTW", "to": "SEIC", "width": 1}, {"correlation": 0.4025856887605585, "from": "COIN", "to": "TPG", "width": 1}, {"correlation": 0.5121574973929766, "from": "TW", "to": "MKTX", "width": 1}, {"correlation": 0.6091726260412084, "from": "LPLA", "to": "PFG", "width": 1}, {"correlation": 0.622235690027237, "from": "LPLA", "to": "FITB", "width": 1}, {"correlation": 0.6275830002721986, "from": "LPLA", "to": "HBAN", "width": 1}, {"correlation": 0.4350381131665018, "from": "LPLA", "to": "NTRS", "width": 1}, {"correlation": 0.4369236954855436, "from": "LPLA", "to": "SEIC", "width": 1}, {"correlation": 0.6020827963632857, "from": "LPLA", "to": "EWBC", "width": 1}, {"correlation": 0.43901655515512505, "from": "LPLA", "to": "CBSH", "width": 1}, {"correlation": 0.7722673327784884, "from": "PFG", "to": "FITB", "width": 1}, {"correlation": 0.5108213091829156, "from": "PFG", "to": "CINF", "width": 1}, {"correlation": 0.7446859336228513, "from": "PFG", "to": "HBAN", "width": 1}, {"correlation": 0.6139654588236525, "from": "PFG", "to": "NTRS", "width": 1}, {"correlation": 0.4596457041812657, "from": "PFG", "to": "CG", "width": 1}, {"correlation": 0.5111610029923823, "from": "PFG", "to": "ARCC", "width": 1}, {"correlation": 0.43866449228378546, "from": "PFG", "to": "TPG", "width": 1}, {"correlation": 0.6532919086206288, "from": "PFG", "to": "SEIC", "width": 1}, {"correlation": 0.6634316568689308, "from": "PFG", "to": "EWBC", "width": 1}, {"correlation": 0.513159585544925, "from": "PFG", "to": "SIGI", "width": 1}, {"correlation": 0.6295560658564873, "from": "PFG", "to": "CBSH", "width": 1}, {"correlation": 0.4093419065053437, "from": "PFG", "to": "CACC", "width": 1}, {"correlation": 0.534600767627043, "from": "FITB", "to": "CINF", "width": 1}, {"correlation": 0.8983240210313638, "from": "FITB", "to": "HBAN", "width": 1}, {"correlation": 0.5899370348573928, "from": "FITB", "to": "NTRS", "width": 1}, {"correlation": 0.5366036882269744, "from": "FITB", "to": "CG", "width": 1}, {"correlation": 0.5008325029828024, "from": "FITB", "to": "ARCC", "width": 1}, {"correlation": 0.5310457132052027, "from": "FITB", "to": "TPG", "width": 1}, {"correlation": 0.660929961332541, "from": "FITB", "to": "SEIC", "width": 1}, {"correlation": 0.8138665524945683, "from": "FITB", "to": "EWBC", "width": 1}, {"correlation": 0.4642885428370877, "from": "FITB", "to": "SIGI", "width": 1}, {"correlation": 0.6987368597371376, "from": "FITB", "to": "CBSH", "width": 1}, {"correlation": 0.4677261151059629, "from": "FITB", "to": "CACC", "width": 1}, {"correlation": 0.5146985321862695, "from": "CINF", "to": "HBAN", "width": 1}, {"correlation": 0.49103082448994917, "from": "CINF", "to": "NTRS", "width": 1}, {"correlation": 0.49823475214975393, "from": "CINF", "to": "SEIC", "width": 1}, {"correlation": 0.4785953001046719, "from": "CINF", "to": "EWBC", "width": 1}, {"correlation": 0.5561161832067179, "from": "CINF", "to": "SIGI", "width": 1}, {"correlation": 0.496225983563696, "from": "CINF", "to": "CBSH", "width": 1}, {"correlation": 0.5827361715248579, "from": "HBAN", "to": "NTRS", "width": 1}, {"correlation": 0.5344173750156637, "from": "HBAN", "to": "CG", "width": 1}, {"correlation": 0.48579172317320757, "from": "HBAN", "to": "ARCC", "width": 1}, {"correlation": 0.5490686869788506, "from": "HBAN", "to": "TPG", "width": 1}, {"correlation": 0.6058161081353071, "from": "HBAN", "to": "SEIC", "width": 1}, {"correlation": 0.8293043940558674, "from": "HBAN", "to": "EWBC", "width": 1}, {"correlation": 0.4303758993796597, "from": "HBAN", "to": "SIGI", "width": 1}, {"correlation": 0.7225302700147529, "from": "HBAN", "to": "CBSH", "width": 1}, {"correlation": 0.44711311281343447, "from": "HBAN", "to": "CACC", "width": 1}, {"correlation": 0.5119581085693985, "from": "NTRS", "to": "CG", "width": 1}, {"correlation": 0.4699196634736889, "from": "NTRS", "to": "ARCC", "width": 1}, {"correlation": 0.48289864229044444, "from": "NTRS", "to": "TPG", "width": 1}, {"correlation": 0.6149994985470079, "from": "NTRS", "to": "SEIC", "width": 1}, {"correlation": 0.6027585905279738, "from": "NTRS", "to": "EWBC", "width": 1}, {"correlation": 0.6631299157776865, "from": "NTRS", "to": "CBSH", "width": 1}, {"correlation": 0.5322371212783417, "from": "CG", "to": "ARCC", "width": 1}, {"correlation": 0.6908078309915552, "from": "CG", "to": "TPG", "width": 1}, {"correlation": 0.6699502827470865, "from": "CG", "to": "SEIC", "width": 1}, {"correlation": 0.5650997315347032, "from": "CG", "to": "EWBC", "width": 1}, {"correlation": 0.5408747394408261, "from": "CG", "to": "CBSH", "width": 1}, {"correlation": 0.5001312912335002, "from": "CG", "to": "CACC", "width": 1}, {"correlation": 0.5135585330794581, "from": "ARCC", "to": "TPG", "width": 1}, {"correlation": 0.5071583585426219, "from": "ARCC", "to": "SEIC", "width": 1}, {"correlation": 0.5174732828245653, "from": "ARCC", "to": "EWBC", "width": 1}, {"correlation": 0.47656971414417804, "from": "ARCC", "to": "CBSH", "width": 1}, {"correlation": 0.5903268047393685, "from": "TPG", "to": "SEIC", "width": 1}, {"correlation": 0.5782658528988827, "from": "TPG", "to": "EWBC", "width": 1}, {"correlation": 0.49976637149360414, "from": "TPG", "to": "CBSH", "width": 1}, {"correlation": 0.5824230139649507, "from": "SEIC", "to": "EWBC", "width": 1}, {"correlation": 0.41730573696638823, "from": "SEIC", "to": "SIGI", "width": 1}, {"correlation": 0.5974037781974663, "from": "SEIC", "to": "CBSH", "width": 1}, {"correlation": 0.5174667452396571, "from": "SEIC", "to": "CACC", "width": 1}, {"correlation": 0.40677366515244, "from": "EWBC", "to": "SIGI", "width": 1}, {"correlation": 0.7002543259817583, "from": "EWBC", "to": "CBSH", "width": 1}, {"correlation": 0.43423954420863664, "from": "EWBC", "to": "CACC", "width": 1}, {"correlation": 0.4807110676408758, "from": "SIGI", "to": "CBSH", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "repulsion": {
+            "centralGravity": 0.01,
+            "damping": 0.09,
+            "nodeDistance": 100,
+            "springConstant": 0.05,
+            "springLength": 200
+        },
+        "solver": "repulsion",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

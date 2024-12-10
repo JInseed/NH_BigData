@@ -1,0 +1,163 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 1200px;
+                 height: 1000px;
+                 background-color: #222222;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "font": {"color": "white"}, "id": "AAPL", "label": "AAPL", "shape": "dot", "size": 11}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "MSFT", "label": "MSFT", "shape": "dot", "size": 9}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "NVDA", "label": "NVDA", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "AVGO", "label": "AVGO", "shape": "dot", "size": 11}, {"color": "yellow", "font": {"color": "white"}, "id": "ADBE", "label": "ADBE", "shape": "star", "size": 20}, {"color": "yellow", "font": {"color": "white"}, "id": "ASML", "label": "ASML", "shape": "star", "size": 20}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "INTC", "label": "INTC", "shape": "dot", "size": 7}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "INTU", "label": "INTU", "shape": "dot", "size": 11}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "TXN", "label": "TXN", "shape": "dot", "size": 12}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "QCOM", "label": "QCOM", "shape": "dot", "size": 10}, {"color": "yellow", "font": {"color": "white"}, "id": "AMAT", "label": "AMAT", "shape": "star", "size": 20}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "LRCX", "label": "LRCX", "shape": "dot", "size": 11}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "ADI", "label": "ADI", "shape": "dot", "size": 12}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "SNPS", "label": "SNPS", "shape": "dot", "size": 11}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "CDNS", "label": "CDNS", "shape": "dot", "size": 11}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "KLAC", "label": "KLAC", "shape": "dot", "size": 12}, {"color": "yellow", "font": {"color": "white"}, "id": "WDAY", "label": "WDAY", "shape": "star", "size": 20}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "ROP", "label": "ROP", "shape": "dot", "size": 5}, {"color": "yellow", "font": {"color": "white"}, "id": "NXPI", "label": "NXPI", "shape": "star", "size": 20}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "FTNT", "label": "FTNT", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "ADSK", "label": "ADSK", "shape": "dot", "size": 9}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "CRWD", "label": "CRWD", "shape": "dot", "size": 11}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "MCHP", "label": "MCHP", "shape": "dot", "size": 11}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "TTD", "label": "TTD", "shape": "dot", "size": 4}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "AMD", "label": "AMD", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "TEAM", "label": "TEAM", "shape": "dot", "size": 3}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "MRVL", "label": "MRVL", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "MU", "label": "MU", "shape": "dot", "size": 9}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "CSCO", "label": "CSCO", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "PANW", "label": "PANW", "shape": "dot", "size": 1}]);
+                  edges = new vis.DataSet([{"correlation": 0.5472653205594664, "from": "AAPL", "to": "MSFT", "width": 1}, {"correlation": 0.41618505746571804, "from": "AAPL", "to": "NVDA", "width": 1}, {"correlation": 0.47008652759690345, "from": "AAPL", "to": "AVGO", "width": 1}, {"correlation": 0.5528747885018689, "from": "AAPL", "to": "ADBE", "width": 1}, {"correlation": 0.4940974228077009, "from": "AAPL", "to": "ASML", "width": 1}, {"correlation": 0.40887552056197246, "from": "AAPL", "to": "INTC", "width": 1}, {"correlation": 0.45915414822067796, "from": "AAPL", "to": "INTU", "width": 1}, {"correlation": 0.5205920822660995, "from": "AAPL", "to": "TXN", "width": 1}, {"correlation": 0.4528992139659495, "from": "AAPL", "to": "QCOM", "width": 1}, {"correlation": 0.46870386493063265, "from": "AAPL", "to": "AMAT", "width": 1}, {"correlation": 0.441125128418482, "from": "AAPL", "to": "LRCX", "width": 1}, {"correlation": 0.4799082087297678, "from": "AAPL", "to": "ADI", "width": 1}, {"correlation": 0.4653298168130104, "from": "AAPL", "to": "SNPS", "width": 1}, {"correlation": 0.4372922387224291, "from": "AAPL", "to": "CDNS", "width": 1}, {"correlation": 0.49162273438475357, "from": "AAPL", "to": "KLAC", "width": 1}, {"correlation": 0.4482844591663976, "from": "AAPL", "to": "WDAY", "width": 1}, {"correlation": 0.4515270806062372, "from": "AAPL", "to": "ROP", "width": 1}, {"correlation": 0.4451074994277536, "from": "AAPL", "to": "NXPI", "width": 1}, {"correlation": 0.4932543401219298, "from": "AAPL", "to": "FTNT", "width": 1}, {"correlation": 0.49205064106066343, "from": "AAPL", "to": "ADSK", "width": 1}, {"correlation": 0.48909303824887157, "from": "AAPL", "to": "CRWD", "width": 1}, {"correlation": 0.4949864796069375, "from": "AAPL", "to": "MCHP", "width": 1}, {"correlation": 0.4332116646244481, "from": "AAPL", "to": "TTD", "width": 1}, {"correlation": 0.5488791045006789, "from": "MSFT", "to": "NVDA", "width": 1}, {"correlation": 0.4136971565234108, "from": "MSFT", "to": "AVGO", "width": 1}, {"correlation": 0.5801852795693334, "from": "MSFT", "to": "ADBE", "width": 1}, {"correlation": 0.5153405082157052, "from": "MSFT", "to": "ASML", "width": 1}, {"correlation": 0.5684138801654771, "from": "MSFT", "to": "AMD", "width": 1}, {"correlation": 0.5399136222770288, "from": "MSFT", "to": "INTU", "width": 1}, {"correlation": 0.46221059653777885, "from": "MSFT", "to": "AMAT", "width": 1}, {"correlation": 0.42804426997450046, "from": "MSFT", "to": "LRCX", "width": 1}, {"correlation": 0.5396759779195849, "from": "MSFT", "to": "SNPS", "width": 1}, {"correlation": 0.5129152748558055, "from": "MSFT", "to": "CDNS", "width": 1}, {"correlation": 0.47809676533069667, "from": "MSFT", "to": "KLAC", "width": 1}, {"correlation": 0.5628392315075824, "from": "MSFT", "to": "WDAY", "width": 1}, {"correlation": 0.4309189498086197, "from": "MSFT", "to": "NXPI", "width": 1}, {"correlation": 0.5201908464121221, "from": "MSFT", "to": "TEAM", "width": 1}, {"correlation": 0.4604631408100134, "from": "MSFT", "to": "MRVL", "width": 1}, {"correlation": 0.5102921542504772, "from": "MSFT", "to": "ADSK", "width": 1}, {"correlation": 0.4864372098934549, "from": "MSFT", "to": "CRWD", "width": 1}, {"correlation": 0.5611130658496093, "from": "NVDA", "to": "AVGO", "width": 1}, {"correlation": 0.566706881286321, "from": "NVDA", "to": "ADBE", "width": 1}, {"correlation": 0.6178051975610819, "from": "NVDA", "to": "ASML", "width": 1}, {"correlation": 0.7009479796682192, "from": "NVDA", "to": "AMD", "width": 1}, {"correlation": 0.46027009244242356, "from": "NVDA", "to": "TXN", "width": 1}, {"correlation": 0.45184129274244444, "from": "NVDA", "to": "QCOM", "width": 1}, {"correlation": 0.628504043123751, "from": "NVDA", "to": "AMAT", "width": 1}, {"correlation": 0.5751418811893496, "from": "NVDA", "to": "LRCX", "width": 1}, {"correlation": 0.409866999864796, "from": "NVDA", "to": "ADI", "width": 1}, {"correlation": 0.49544540488134875, "from": "NVDA", "to": "MU", "width": 1}, {"correlation": 0.7495685074102747, "from": "NVDA", "to": "SNPS", "width": 1}, {"correlation": 0.7065958148619068, "from": "NVDA", "to": "CDNS", "width": 1}, {"correlation": 0.5807168913316921, "from": "NVDA", "to": "KLAC", "width": 1}, {"correlation": 0.5492448469455986, "from": "NVDA", "to": "NXPI", "width": 1}, {"correlation": 0.5728860197019572, "from": "NVDA", "to": "MRVL", "width": 1}, {"correlation": 0.41090542855856044, "from": "NVDA", "to": "ADSK", "width": 1}, {"correlation": 0.41175151038467994, "from": "NVDA", "to": "CRWD", "width": 1}, {"correlation": 0.4676043801881013, "from": "NVDA", "to": "MCHP", "width": 1}, {"correlation": 0.5942116272171583, "from": "AVGO", "to": "ADBE", "width": 1}, {"correlation": 0.5949914521118276, "from": "AVGO", "to": "ASML", "width": 1}, {"correlation": 0.42380393886440815, "from": "AVGO", "to": "CSCO", "width": 1}, {"correlation": 0.5391077642688635, "from": "AVGO", "to": "AMD", "width": 1}, {"correlation": 0.4298705856934708, "from": "AVGO", "to": "INTC", "width": 1}, {"correlation": 0.4028239954601071, "from": "AVGO", "to": "INTU", "width": 1}, {"correlation": 0.6569361121209202, "from": "AVGO", "to": "TXN", "width": 1}, {"correlation": 0.5030146558661245, "from": "AVGO", "to": "QCOM", "width": 1}, {"correlation": 0.6561557944907929, "from": "AVGO", "to": "AMAT", "width": 1}, {"correlation": 0.6035807414214212, "from": "AVGO", "to": "LRCX", "width": 1}, {"correlation": 0.5284486108324038, "from": "AVGO", "to": "ADI", "width": 1}, {"correlation": 0.4811109069923652, "from": "AVGO", "to": "MU", "width": 1}, {"correlation": 0.6041067215520595, "from": "AVGO", "to": "SNPS", "width": 1}, {"correlation": 0.5291926461558188, "from": "AVGO", "to": "CDNS", "width": 1}, {"correlation": 0.6492111447674538, "from": "AVGO", "to": "KLAC", "width": 1}, {"correlation": 0.5327430623796896, "from": "AVGO", "to": "WDAY", "width": 1}, {"correlation": 0.6206482592346402, "from": "AVGO", "to": "NXPI", "width": 1}, {"correlation": 0.6674252202834907, "from": "AVGO", "to": "MRVL", "width": 1}, {"correlation": 0.4042168041911902, "from": "AVGO", "to": "ADSK", "width": 1}, {"correlation": 0.5980852344697634, "from": "AVGO", "to": "MCHP", "width": 1}, {"correlation": 0.5804403766741896, "from": "ADBE", "to": "ASML", "width": 1}, {"correlation": 0.6164706188116167, "from": "ADBE", "to": "AMD", "width": 1}, {"correlation": 0.5880884024998472, "from": "ADBE", "to": "INTU", "width": 1}, {"correlation": 0.5523781747659703, "from": "ADBE", "to": "TXN", "width": 1}, {"correlation": 0.5795707630601081, "from": "ADBE", "to": "QCOM", "width": 1}, {"correlation": 0.5535902168101127, "from": "ADBE", "to": "AMAT", "width": 1}, {"correlation": 0.5284926778957992, "from": "ADBE", "to": "LRCX", "width": 1}, {"correlation": 0.4899914533243352, "from": "ADBE", "to": "ADI", "width": 1}, {"correlation": 0.4348581743365511, "from": "ADBE", "to": "MU", "width": 1}, {"correlation": 0.5904202067247861, "from": "ADBE", "to": "SNPS", "width": 1}, {"correlation": 0.6134675081942187, "from": "ADBE", "to": "CDNS", "width": 1}, {"correlation": 0.5660169412422039, "from": "ADBE", "to": "KLAC", "width": 1}, {"correlation": 0.600925010893685, "from": "ADBE", "to": "WDAY", "width": 1}, {"correlation": 0.41537523405716537, "from": "ADBE", "to": "ROP", "width": 1}, {"correlation": 0.5476123722158168, "from": "ADBE", "to": "NXPI", "width": 1}, {"correlation": 0.43894119553237776, "from": "ADBE", "to": "TEAM", "width": 1}, {"correlation": 0.5681720922473987, "from": "ADBE", "to": "MRVL", "width": 1}, {"correlation": 0.6144809018904707, "from": "ADBE", "to": "ADSK", "width": 1}, {"correlation": 0.4799174178276047, "from": "ADBE", "to": "CRWD", "width": 1}, {"correlation": 0.45905051197395047, "from": "ADBE", "to": "MCHP", "width": 1}, {"correlation": 0.4008563237040448, "from": "ADBE", "to": "TTD", "width": 1}, {"correlation": 0.6584303768898513, "from": "ASML", "to": "AMD", "width": 1}, {"correlation": 0.5065972962579989, "from": "ASML", "to": "INTC", "width": 1}, {"correlation": 0.525762915373857, "from": "ASML", "to": "INTU", "width": 1}, {"correlation": 0.7053462527477915, "from": "ASML", "to": "TXN", "width": 1}, {"correlation": 0.6048655954315443, "from": "ASML", "to": "QCOM", "width": 1}, {"correlation": 0.8267641966972084, "from": "ASML", "to": "AMAT", "width": 1}, {"correlation": 0.8119504964712737, "from": "ASML", "to": "LRCX", "width": 1}, {"correlation": 0.6207345298883598, "from": "ASML", "to": "ADI", "width": 1}, {"correlation": 0.581701365432859, "from": "ASML", "to": "MU", "width": 1}, {"correlation": 0.6707519787708179, "from": "ASML", "to": "SNPS", "width": 1}, {"correlation": 0.6579913620278015, "from": "ASML", "to": "CDNS", "width": 1}, {"correlation": 0.8225196050707904, "from": "ASML", "to": "KLAC", "width": 1}, {"correlation": 0.5118960501572413, "from": "ASML", "to": "WDAY", "width": 1}, {"correlation": 0.48188589419284583, "from": "ASML", "to": "ROP", "width": 1}, {"correlation": 0.6983211931283684, "from": "ASML", "to": "NXPI", "width": 1}, {"correlation": 0.6228878007247651, "from": "ASML", "to": "MRVL", "width": 1}, {"correlation": 0.5147457523989313, "from": "ASML", "to": "ADSK", "width": 1}, {"correlation": 0.4659464301992081, "from": "ASML", "to": "CRWD", "width": 1}, {"correlation": 0.6700644679429772, "from": "ASML", "to": "MCHP", "width": 1}, {"correlation": 0.4852015087401752, "from": "CSCO", "to": "TXN", "width": 1}, {"correlation": 0.40075397756325254, "from": "CSCO", "to": "ADI", "width": 1}, {"correlation": 0.4422143622298713, "from": "CSCO", "to": "NXPI", "width": 1}, {"correlation": 0.4800674364732693, "from": "AMD", "to": "INTU", "width": 1}, {"correlation": 0.5188852975444588, "from": "AMD", "to": "TXN", "width": 1}, {"correlation": 0.4932031814345812, "from": "AMD", "to": "QCOM", "width": 1}, {"correlation": 0.6690816061182779, "from": "AMD", "to": "AMAT", "width": 1}, {"correlation": 0.670535546112868, "from": "AMD", "to": "LRCX", "width": 1}, {"correlation": 0.4776881981758937, "from": "AMD", "to": "ADI", "width": 1}, {"correlation": 0.5232074411121235, "from": "AMD", "to": "MU", "width": 1}, {"correlation": 0.6664549726952755, "from": "AMD", "to": "SNPS", "width": 1}, {"correlation": 0.6259013477977923, "from": "AMD", "to": "CDNS", "width": 1}, {"correlation": 0.6400058960018536, "from": "AMD", "to": "KLAC", "width": 1}, {"correlation": 0.469833609035613, "from": "AMD", "to": "WDAY", "width": 1}, {"correlation": 0.5577936851233117, "from": "AMD", "to": "NXPI", "width": 1}, {"correlation": 0.6045579793748631, "from": "AMD", "to": "MRVL", "width": 1}, {"correlation": 0.5229993488614921, "from": "AMD", "to": "CRWD", "width": 1}, {"correlation": 0.49421623487967387, "from": "AMD", "to": "MCHP", "width": 1}, {"correlation": 0.42699078975758986, "from": "INTC", "to": "INTU", "width": 1}, {"correlation": 0.5415289868298652, "from": "INTC", "to": "TXN", "width": 1}, {"correlation": 0.49950633678585477, "from": "INTC", "to": "QCOM", "width": 1}, {"correlation": 0.48923220266182765, "from": "INTC", "to": "AMAT", "width": 1}, {"correlation": 0.4956559645690605, "from": "INTC", "to": "LRCX", "width": 1}, {"correlation": 0.553567836241006, "from": "INTC", "to": "ADI", "width": 1}, {"correlation": 0.41930375500885125, "from": "INTC", "to": "MU", "width": 1}, {"correlation": 0.5159220294934471, "from": "INTC", "to": "KLAC", "width": 1}, {"correlation": 0.49755725713258786, "from": "INTC", "to": "WDAY", "width": 1}, {"correlation": 0.49863540069502443, "from": "INTC", "to": "NXPI", "width": 1}, {"correlation": 0.4312811857697359, "from": "INTC", "to": "MRVL", "width": 1}, {"correlation": 0.543966619963008, "from": "INTC", "to": "MCHP", "width": 1}, {"correlation": 0.4748491035965713, "from": "INTU", "to": "TXN", "width": 1}, {"correlation": 0.45842620629252956, "from": "INTU", "to": "QCOM", "width": 1}, {"correlation": 0.48943727787292, "from": "INTU", "to": "AMAT", "width": 1}, {"correlation": 0.4811088790050169, "from": "INTU", "to": "LRCX", "width": 1}, {"correlation": 0.5388686358716533, "from": "INTU", "to": "ADI", "width": 1}, {"correlation": 0.4846477813765151, "from": "INTU", "to": "SNPS", "width": 1}, {"correlation": 0.5133485745363217, "from": "INTU", "to": "CDNS", "width": 1}, {"correlation": 0.4745323089463153, "from": "INTU", "to": "KLAC", "width": 1}, {"correlation": 0.5832848547069974, "from": "INTU", "to": "WDAY", "width": 1}, {"correlation": 0.42803225739396844, "from": "INTU", "to": "ROP", "width": 1}, {"correlation": 0.4938950693983602, "from": "INTU", "to": "NXPI", "width": 1}, {"correlation": 0.48283852683131595, "from": "INTU", "to": "TEAM", "width": 1}, {"correlation": 0.5600937175369857, "from": "INTU", "to": "ADSK", "width": 1}, {"correlation": 0.4605261207779128, "from": "INTU", "to": "CRWD", "width": 1}, {"correlation": 0.46716937673021935, "from": "INTU", "to": "MCHP", "width": 1}, {"correlation": 0.4296577968214598, "from": "INTU", "to": "TTD", "width": 1}, {"correlation": 0.647647554361516, "from": "TXN", "to": "QCOM", "width": 1}, {"correlation": 0.7200641332336629, "from": "TXN", "to": "AMAT", "width": 1}, {"correlation": 0.6902158396434184, "from": "TXN", "to": "LRCX", "width": 1}, {"correlation": 0.7433357155655094, "from": "TXN", "to": "ADI", "width": 1}, {"correlation": 0.5360206899017655, "from": "TXN", "to": "MU", "width": 1}, {"correlation": 0.5840517958740136, "from": "TXN", "to": "SNPS", "width": 1}, {"correlation": 0.5312789979850803, "from": "TXN", "to": "CDNS", "width": 1}, {"correlation": 0.6962782260730955, "from": "TXN", "to": "KLAC", "width": 1}, {"correlation": 0.5038016642734534, "from": "TXN", "to": "WDAY", "width": 1}, {"correlation": 0.490583556586532, "from": "TXN", "to": "ROP", "width": 1}, {"correlation": 0.7552724255878511, "from": "TXN", "to": "NXPI", "width": 1}, {"correlation": 0.6007952112990265, "from": "TXN", "to": "MRVL", "width": 1}, {"correlation": 0.5101911241680847, "from": "TXN", "to": "ADSK", "width": 1}, {"correlation": 0.43541800440906375, "from": "TXN", "to": "CRWD", "width": 1}, {"correlation": 0.7723683051638751, "from": "TXN", "to": "MCHP", "width": 1}, {"correlation": 0.6266680622249048, "from": "QCOM", "to": "AMAT", "width": 1}, {"correlation": 0.6135078453128608, "from": "QCOM", "to": "LRCX", "width": 1}, {"correlation": 0.5997194559883917, "from": "QCOM", "to": "ADI", "width": 1}, {"correlation": 0.552241620904127, "from": "QCOM", "to": "MU", "width": 1}, {"correlation": 0.5440213432309828, "from": "QCOM", "to": "SNPS", "width": 1}, {"correlation": 0.5006519656093462, "from": "QCOM", "to": "CDNS", "width": 1}, {"correlation": 0.6010411978162942, "from": "QCOM", "to": "KLAC", "width": 1}, {"correlation": 0.455622953699963, "from": "QCOM", "to": "WDAY", "width": 1}, {"correlation": 0.6690619747496297, "from": "QCOM", "to": "NXPI", "width": 1}, {"correlation": 0.5872448509234969, "from": "QCOM", "to": "MRVL", "width": 1}, {"correlation": 0.44358259602545524, "from": "QCOM", "to": "ADSK", "width": 1}, {"correlation": 0.5856257598592968, "from": "QCOM", "to": "MCHP", "width": 1}, {"correlation": 0.8984865948790544, "from": "AMAT", "to": "LRCX", "width": 1}, {"correlation": 0.6679614297115695, "from": "AMAT", "to": "ADI", "width": 1}, {"correlation": 0.5842514864370562, "from": "AMAT", "to": "MU", "width": 1}, {"correlation": 0.6848759536888163, "from": "AMAT", "to": "SNPS", "width": 1}, {"correlation": 0.6285193430386521, "from": "AMAT", "to": "CDNS", "width": 1}, {"correlation": 0.871746222335061, "from": "AMAT", "to": "KLAC", "width": 1}, {"correlation": 0.5123280716023834, "from": "AMAT", "to": "WDAY", "width": 1}, {"correlation": 0.4354369318754481, "from": "AMAT", "to": "ROP", "width": 1}, {"correlation": 0.7587730175720497, "from": "AMAT", "to": "NXPI", "width": 1}, {"correlation": 0.6316253223958649, "from": "AMAT", "to": "MRVL", "width": 1}, {"correlation": 0.46953366288912807, "from": "AMAT", "to": "ADSK", "width": 1}, {"correlation": 0.46199720794999816, "from": "AMAT", "to": "CRWD", "width": 1}, {"correlation": 0.7221080694513827, "from": "AMAT", "to": "MCHP", "width": 1}, {"correlation": 0.40420611370808446, "from": "AMAT", "to": "TTD", "width": 1}, {"correlation": 0.6207100776184894, "from": "LRCX", "to": "ADI", "width": 1}, {"correlation": 0.6456492309364238, "from": "LRCX", "to": "MU", "width": 1}, {"correlation": 0.635734282938928, "from": "LRCX", "to": "SNPS", "width": 1}, {"correlation": 0.5889177276199152, "from": "LRCX", "to": "CDNS", "width": 1}, {"correlation": 0.8971774447725894, "from": "LRCX", "to": "KLAC", "width": 1}, {"correlation": 0.4758203741632545, "from": "LRCX", "to": "WDAY", "width": 1}, {"correlation": 0.40259147660532435, "from": "LRCX", "to": "ROP", "width": 1}, {"correlation": 0.7023756593552952, "from": "LRCX", "to": "NXPI", "width": 1}, {"correlation": 0.5985724051008228, "from": "LRCX", "to": "MRVL", "width": 1}, {"correlation": 0.40876841612210896, "from": "LRCX", "to": "CRWD", "width": 1}, {"correlation": 0.6567623961634149, "from": "LRCX", "to": "MCHP", "width": 1}, {"correlation": 0.4336314390396812, "from": "ADI", "to": "MU", "width": 1}, {"correlation": 0.4863121625185752, "from": "ADI", "to": "SNPS", "width": 1}, {"correlation": 0.4920257177952225, "from": "ADI", "to": "CDNS", "width": 1}, {"correlation": 0.6184793926184564, "from": "ADI", "to": "KLAC", "width": 1}, {"correlation": 0.475232431439709, "from": "ADI", "to": "WDAY", "width": 1}, {"correlation": 0.8022121336723723, "from": "ADI", "to": "NXPI", "width": 1}, {"correlation": 0.5058925722720731, "from": "ADI", "to": "MRVL", "width": 1}, {"correlation": 0.4923967235808096, "from": "ADI", "to": "ADSK", "width": 1}, {"correlation": 0.44706839734317677, "from": "ADI", "to": "CRWD", "width": 1}, {"correlation": 0.8316438566610794, "from": "ADI", "to": "MCHP", "width": 1}, {"correlation": 0.5549021650107737, "from": "ADI", "to": "TTD", "width": 1}, {"correlation": 0.423113117796567, "from": "PANW", "to": "WDAY", "width": 1}, {"correlation": 0.5350348509551177, "from": "PANW", "to": "FTNT", "width": 1}, {"correlation": 0.6151954411287431, "from": "PANW", "to": "CRWD", "width": 1}, {"correlation": 0.4987657199518756, "from": "MU", "to": "SNPS", "width": 1}, {"correlation": 0.4689642576724021, "from": "MU", "to": "CDNS", "width": 1}, {"correlation": 0.5686762146643188, "from": "MU", "to": "KLAC", "width": 1}, {"correlation": 0.4148719071143751, "from": "MU", "to": "WDAY", "width": 1}, {"correlation": 0.5229012179510711, "from": "MU", "to": "NXPI", "width": 1}, {"correlation": 0.6047638459002443, "from": "MU", "to": "MRVL", "width": 1}, {"correlation": 0.47930444936892375, "from": "MU", "to": "MCHP", "width": 1}, {"correlation": 0.9040777820136516, "from": "SNPS", "to": "CDNS", "width": 1}, {"correlation": 0.6457085116064801, "from": "SNPS", "to": "KLAC", "width": 1}, {"correlation": 0.5107509922017148, "from": "SNPS", "to": "WDAY", "width": 1}, {"correlation": 0.41844368160332457, "from": "SNPS", "to": "ROP", "width": 1}, {"correlation": 0.5886839700762558, "from": "SNPS", "to": "NXPI", "width": 1}, {"correlation": 0.527811012822413, "from": "SNPS", "to": "MRVL", "width": 1}, {"correlation": 0.49259252479070426, "from": "SNPS", "to": "ADSK", "width": 1}, {"correlation": 0.5593770480956138, "from": "SNPS", "to": "CRWD", "width": 1}, {"correlation": 0.4772695700206285, "from": "SNPS", "to": "MCHP", "width": 1}, {"correlation": 0.6124693544261753, "from": "CDNS", "to": "KLAC", "width": 1}, {"correlation": 0.47879181000284043, "from": "CDNS", "to": "WDAY", "width": 1}, {"correlation": 0.4336195869513678, "from": "CDNS", "to": "ROP", "width": 1}, {"correlation": 0.5155068555304663, "from": "CDNS", "to": "NXPI", "width": 1}, {"correlation": 0.47166536676875115, "from": "CDNS", "to": "MRVL", "width": 1}, {"correlation": 0.497327516601147, "from": "CDNS", "to": "ADSK", "width": 1}, {"correlation": 0.5321370674227784, "from": "CDNS", "to": "CRWD", "width": 1}, {"correlation": 0.4515434381425021, "from": "CDNS", "to": "MCHP", "width": 1}, {"correlation": 0.49533410112841936, "from": "KLAC", "to": "WDAY", "width": 1}, {"correlation": 0.5200469220741052, "from": "KLAC", "to": "ROP", "width": 1}, {"correlation": 0.6743871986587184, "from": "KLAC", "to": "NXPI", "width": 1}, {"correlation": 0.6339834142603817, "from": "KLAC", "to": "MRVL", "width": 1}, {"correlation": 0.4088931231810851, "from": "KLAC", "to": "ADSK", "width": 1}, {"correlation": 0.44093184709024646, "from": "KLAC", "to": "CRWD", "width": 1}, {"correlation": 0.6779267600840044, "from": "KLAC", "to": "MCHP", "width": 1}, {"correlation": 0.5198918765246617, "from": "WDAY", "to": "NXPI", "width": 1}, {"correlation": 0.521688945157164, "from": "WDAY", "to": "TEAM", "width": 1}, {"correlation": 0.5872438296602989, "from": "WDAY", "to": "MRVL", "width": 1}, {"correlation": 0.6235098145652034, "from": "WDAY", "to": "ADSK", "width": 1}, {"correlation": 0.59661416253341, "from": "WDAY", "to": "CRWD", "width": 1}, {"correlation": 0.4835591823138204, "from": "WDAY", "to": "MCHP", "width": 1}, {"correlation": 0.6874078514501777, "from": "NXPI", "to": "MRVL", "width": 1}, {"correlation": 0.5003266711953269, "from": "NXPI", "to": "ADSK", "width": 1}, {"correlation": 0.4478661153334005, "from": "NXPI", "to": "CRWD", "width": 1}, {"correlation": 0.8596941776876645, "from": "NXPI", "to": "MCHP", "width": 1}, {"correlation": 0.40159804911829794, "from": "NXPI", "to": "TTD", "width": 1}, {"correlation": 0.5352296872073488, "from": "TEAM", "to": "ADSK", "width": 1}, {"correlation": 0.45443387458462375, "from": "TEAM", "to": "CRWD", "width": 1}, {"correlation": 0.40878507587170027, "from": "TEAM", "to": "TTD", "width": 1}, {"correlation": 0.42691728298819837, "from": "MRVL", "to": "CRWD", "width": 1}, {"correlation": 0.6213545829778347, "from": "MRVL", "to": "MCHP", "width": 1}, {"correlation": 0.4842764386632496, "from": "FTNT", "to": "CRWD", "width": 1}, {"correlation": 0.49311160051402536, "from": "ADSK", "to": "CRWD", "width": 1}, {"correlation": 0.4889753746708133, "from": "ADSK", "to": "MCHP", "width": 1}, {"correlation": 0.41431925595585195, "from": "CRWD", "to": "MCHP", "width": 1}, {"correlation": 0.44498289258920154, "from": "CRWD", "to": "TTD", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "repulsion": {
+            "centralGravity": 0.01,
+            "damping": 0.09,
+            "nodeDistance": 100,
+            "springConstant": 0.05,
+            "springLength": 200
+        },
+        "solver": "repulsion",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
